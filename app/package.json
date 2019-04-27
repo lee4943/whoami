@@ -4,7 +4,8 @@
   "description": "Like the command you know and love, but different.",
   "main": "index.js",
   "scripts": {
-    "start": "docker-compose -f ../docker-compose.yml up --detach && sleep 5 && node index.js"
+    "start": "docker-compose -f ../docker-compose.yml up --detach && sleep 10 && node index.js",
+    "test": "mocha --exit"
   },
   "repository": {
     "type": "git",
@@ -21,8 +22,11 @@
   "homepage": "https://github.com/lee4943/whoami#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "express": "^4.16.4",
     "express-session": "^1.16.1",
+    "mocha": "^6.1.4",
     "mongoose": "^5.5.4",
     "mustache": "^3.0.1",
     "mustache-express": "^1.2.8",

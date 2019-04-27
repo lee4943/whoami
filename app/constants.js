@@ -1,9 +1,9 @@
-const APP_PORT = 80;
-const CLIENT_ID = "";
-const CLIENT_SECRET = "";
-const DB_SERVER = "localhost";
-const DB_PORT = 27017;
-const DB_NAME = "whoami";
+const APP_PORT = 80;    // express port
+const CLIENT_ID = "";   // client ID for GitHub auth
+const CLIENT_SECRET = "";   // client secret for GitHub auth
+const DB_SERVER = "localhost";  // mongodb hostname
+const DB_PORT = 27017;  // mongodb port
+const DB_NAME = "whoami";   // mongodb database name
 
 module.exports = {
     APP_PORT: APP_PORT,
