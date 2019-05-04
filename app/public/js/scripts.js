@@ -10,44 +10,35 @@ function populateDetails(data) {
 }
 
 /*
-    queries '/current_user_data' to grab profileId of logged-in user if logged in;
-    if so, queries '/users/${profileId}' to grab other details about logged-in user,
+    queries '/users/${profileId}' to grab other details about logged-in user,
     calls populateDetails to populate DOM with user profile information
 */
 function getDetails() {
-    $.getJSON("/current_user_id", (data) => {   // TODO - refactor out duplicate code
-        if(data) {
-            const profileId = data.profileId;
-            $.getJSON(`/users/${profileId}`, (data) => {
-                populateDetails(data);
-            });
-        }
-    });
+    const profileId = sessionStorage.getItem('profileId');
+    if(profileId) {
+        $.getJSON(`/users/${profileId}`, (data) => {
+            populateDetails(data);
+        });
+    }
 }
 
 /*
-    queries '/current_user_data' to grab profileId of logged-in user if logged in;
-    if so, PUTs to '/users/${profileId}' to change logged-in user's 'description',
-    calls 'getDetails' to repopulate DOM with updated user profile information
+    PUTs to '/users/${profileId}' to change logged-in user's 'description',
+    calls 'populateDetails' to repopulate DOM with updated user profile information
 */
 function changeDescription() {
     const newDescription = $("textarea#description").val();
-    $.getJSON("/current_user_id", (data) => {   // TODO - refactor out duplicate code
-        if(data) {
-            const profileId = data.profileId;
-            $.ajax({
-                url: `/users/${profileId}`,
-                type: "PUT",
-                data: {description: newDescription},
-                success: () => {
-                  console.log(`Successfully added new description: ${newDescription}`);
-                },
-                error: () => {
-                  console.log(`Error adding new description: ${newDescription}`);
-                },
-                complete: getDetails()
-             });
-        }
+    const profileId = sessionStorage.getItem('profileId');
+    $.ajax({
+        url: `/users/${profileId}`,
+        type: "PUT",
+        data: {description: newDescription}
+    })
+    .done((data) => {
+        populateDetails(data);
+    })
+    .fail((xhr, status, err) => {
+        console.err(`Error changing description: ${err}`);
     });
 }
 

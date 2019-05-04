@@ -9,8 +9,14 @@
   <meta name="author" content="JD">
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <div class="text-center">
+</head>
+
+<body>
+    <div class="text-center">
         {{#user}}
+        <script>
+            sessionStorage.setItem('profileId', '{{user.profileId}}');
+        </script>
         <h2 class="py-2"><a href="/logout">Log out</a></h2>
         <div class="py-1">
             <span><b>Name</b>:</span>
@@ -39,17 +45,18 @@
         </div>
         {{/user}}
         {{^user}}
+        <script>
+            sessionStorage.clear();
+        </script>
         <h2 class="py-2"><a href='/auth/github'>Log in with GitHub</a></h2>
         <div>
-            <img src="https://d25hn4jiqx5f7l.cloudfront.net/companies/logos/medium/desic-labs_1547252270.png?1547252270"/>
+            <img class="rounded-circle" src="https://c.saavncdn.com/956/whoami-English-2014-500x500.jpg"/>
         </div>
         {{/user}}
     </div>
 
-</head>
-
-<body>
   <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
   <script src="js/scripts.js"></script>
 </body>
+
 </html>

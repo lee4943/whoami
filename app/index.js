@@ -32,7 +32,7 @@ passport.use(new GitHubStrategy({
             profileId: profile.id
         }, (err, user) => {
             if (user) {
-                done(null, user);
+                done(err, user);
             }
             else {
                 const newUser = new User({
@@ -43,7 +43,7 @@ passport.use(new GitHubStrategy({
                 });
 
                 newUser.save((err, newUser) => {
-                    done(null, newUser);
+                    done(err, newUser);
                 });
             }
         });
@@ -88,29 +88,15 @@ app.get("/auth/github/callback",
 });
 
 // main landing page
-// page rendering is dictated by if a user is logged in (loggedIn) - see 'index.html'
+// page rendering is dictated by if a user is logged in - see 'index.html'
 app.get("/", (req, res) => {
-    let loggedIn = req.user ? true : false;
-    res.render("index", { user: loggedIn});
+    res.render("index", { user: req.user});
 });
 
 // passport-based logout, redirect to /
 app.get("/logout", (req, res) => {
     req.logout();
     res.redirect("/");
-});
-
-// returns profileId of logged-in user if logged in, null if not
-app.get("/current_user_id",
-    (req, res) => {
-        if (req.user) {
-            res.json({
-                profileId: req.user.profileId
-            });
-        }
-        else {
-            res.json(null);
-        }
 });
 
 /*
@@ -125,6 +111,9 @@ app.get("/users/:id",
         User.findOne({
             profileId: req.params.id
         }, (err, user) => {
+            if (err)
+                res.status(500).json({ error: err.toString() });
+
             res.json(user);
         });
     }
@@ -146,11 +135,13 @@ app.put("/users/:id",
             }, {
                 description: req.body.description
             }, {
+                new: true,
                 useFindAndModify: false
             }, (err, user) => {
                 if (err)
-                    console.log(err);
-                res.sendStatus(200);
+                    res.status(500).json({ error: err.toString() });
+
+                res.json(user);
             });
         }
         else {
